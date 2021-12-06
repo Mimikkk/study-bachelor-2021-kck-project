@@ -6,14 +6,14 @@ from typing import Any
 from keras import Sequential
 from keras.activations import relu, softmax
 from keras.backend import categorical_crossentropy
-from keras.callbacks import ModelCheckpoint, Callback
+from keras.callbacks import ModelCheckpoint, Callback, EarlyStopping
 from keras.engine.input_layer import InputLayer
-from keras.layers import Dense, Dropout, Flatten, MaxPool2D, Convolution2D
+from keras.layers import Dense, Dropout, Flatten, MaxPool2D, Convolution2D, MaxPooling2D, Conv2D, AveragePooling2D
 from keras.optimizer_v2.adam import Adam
 from keras_preprocessing.image import ImageDataGenerator
 from numpy.typing import NDArray
 
-from constants import Paths, CardImageSize
+from constants import Paths, CardImageSize, CardImageChannels, CardImageShape
 
 @dataclass
 class Model(object):
@@ -23,15 +23,32 @@ class Model(object):
   @classmethod
   def uncompiled(cls, modelname: str) -> Model:
     return Model(Sequential([
-      InputLayer((*CardImageSize, 1)),
-      Convolution2D(32, (5, 5), 1, 'same', activation=relu),
-      MaxPool2D(2, (2, 2), padding='same'),
-      Convolution2D(64, (5, 5), padding='same', activation=relu),
-      MaxPool2D(2, padding='same'),
-      Flatten(),
-      Dense(1024, activation=relu),
+      InputLayer(CardImageShape),
+      Convolution2D(32, (5, 5), padding='same', activation=relu),
+      MaxPooling2D(2, 2),
       Dropout(0.2),
-      Dense(52, activation=softmax),
+      Convolution2D(64, (3, 3), padding='same', activation=relu),
+      MaxPooling2D(2, 2),
+      Dropout(0.1),
+      Convolution2D(128, (3, 3), padding='same', activation=relu),
+      MaxPooling2D(2, 2),
+      Flatten(),
+      Dropout(0.3),
+      Dense(1024, activation=relu),
+      Dense(52, activation=softmax)
+      # InputLayer((*CardImageSize, CardImageChannels)),
+      # Conv2D(64, (3, 3), activation='relu'),
+      # MaxPooling2D(2, 2),
+      # Conv2D(64, (3, 3), activation='relu'),
+      # MaxPooling2D(2, 2),
+      # Conv2D(128, (3, 3), activation='relu'),
+      # MaxPooling2D(2, 2),
+      # Conv2D(128, (3, 3), activation='relu'),
+      # MaxPooling2D(2, 2),
+      # Flatten(),
+      # Dropout(0.25),
+      # Dense(512, activation='relu'),
+      # Dense(52, activation='softmax')
     ]), modelname)
 
   @classmethod
@@ -46,8 +63,8 @@ class Model(object):
     model._handle.load_weights(join(Paths['models'], f"{modelname}.h5"))
     return model
 
-  def predict(self, item: Any) -> int:
-    return self._handle.predict(item)
+  def predict(self, item: Any) -> list[int]:
+    return self._handle.predict(item)[0]
 
   def save(self):
     self._handle.save(join(Paths['models'], f"{self.name}.h5"))

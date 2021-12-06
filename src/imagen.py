@@ -3,14 +3,14 @@ import numpy as np
 
 def create() -> ImageDataGenerator:
   return ImageDataGenerator(
+    rescale=1. / 255,
     rotation_range=180,
-    shear_range=20,
-    zoom_range=0.3,
+    shear_range=10,
+    zoom_range=0.2,
     width_shift_range=0.2,
     height_shift_range=0.2,
-    rescale=1. / 255,
-    brightness_range=[0.2, 1.2],
-    validation_split=0.1
+    brightness_range=[0.2, 1.5],
+    validation_split=0.2
   )
 
 def fitted(images: np.ndarray) -> ImageDataGenerator:

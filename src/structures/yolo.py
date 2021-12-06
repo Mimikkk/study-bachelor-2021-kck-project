@@ -3,7 +3,7 @@ from dataclasses import astuple, dataclass
 
 from numpy import uint8
 
-from constants import Classes
+from constants import Labels
 
 
 @dataclass
@@ -43,5 +43,5 @@ class Yolo(object):
     with open(path, 'r') as file:
       for yolo in file.readlines():
         (label, x, y, w, h) = map(float, yolo.split())
-        yolos.append(cls(uint8(Classes[labels[int(label)]]), x, y, w, h))
+        yolos.append(cls(uint8(Labels[labels[int(label)]]), x, y, w, h))
     return yolos

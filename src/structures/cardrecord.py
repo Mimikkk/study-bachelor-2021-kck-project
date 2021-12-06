@@ -1,10 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
 
-from cv2 import imread, resize, IMREAD_GRAYSCALE, imshow
+from cv2 import imread, resize, IMREAD_GRAYSCALE, imshow, IMREAD_COLOR
 from numpy.typing import NDArray
 
-from constants import Paths, Classes, CardImageSize
+from constants import Paths, Labels, CardImageSize, CardImageChannels, CardImageShape
 
 @dataclass
 class CardRecord(object):
@@ -13,11 +13,15 @@ class CardRecord(object):
 
   @classmethod
   def from_path(cls, path: str) -> CardRecord:
-    image = imread(f"{Paths['cards']}/{path}", IMREAD_GRAYSCALE)
+    image: NDArray
+    if CardImageChannels == 1:
+      image = imread(f"{Paths['cards']}/{path}", IMREAD_GRAYSCALE)
+    else:
+      image = imread(f"{Paths['cards']}/{path}", IMREAD_COLOR)
     image = resize(image, CardImageSize)
-    image.resize((*CardImageSize, 1))
+    image.resize(CardImageShape)
 
-    label = Classes[path.split(".")[0]]
+    label = Labels[path.split(".")[0]]
     return cls(image, label)
 
   def show(self):
