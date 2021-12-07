@@ -23,20 +23,21 @@ class Model(object):
   @classmethod
   def uncompiled(cls, modelname: str) -> Model:
     return Model(Sequential([
-      InputLayer(CardImageShape),
-      Convolution2D(32, (5, 5), padding='same', activation=relu),
-      MaxPooling2D(2, 2),
-      Dropout(0.2),
-      Convolution2D(64, (3, 3), padding='same', activation=relu),
-      MaxPooling2D(2, 2),
-      Dropout(0.1),
-      Convolution2D(128, (3, 3), padding='same', activation=relu),
-      MaxPooling2D(2, 2),
-      Flatten(),
-      Dropout(0.3),
-      Dense(1024, activation=relu),
-      Dense(52, activation=softmax)
-      # InputLayer((*CardImageSize, CardImageChannels)),
+      # InputLayer(CardImageShape),
+      # Convolution2D(32, (5, 5), padding='same', activation=relu),
+      # MaxPooling2D(2, 2),
+      # Dropout(0.2),
+      # Convolution2D(64, (3, 3), padding='same', activation=relu),
+      # MaxPooling2D(2, 2),
+      # Dropout(0.1),
+      # Convolution2D(128, (3, 3), padding='same', activation=relu),
+      # MaxPooling2D(2, 2),
+      # Flatten(),
+      # Dropout(0.3),
+      # Dense(1024, activation=relu),
+      # Dense(52, activation=softmax)
+
+      # InputLayer(CardImageShape),
       # Conv2D(64, (3, 3), activation='relu'),
       # MaxPooling2D(2, 2),
       # Conv2D(64, (3, 3), activation='relu'),
@@ -48,7 +49,20 @@ class Model(object):
       # Flatten(),
       # Dropout(0.25),
       # Dense(512, activation='relu'),
-      # Dense(52, activation='softmax')
+
+      InputLayer(CardImageShape),
+      Conv2D(64, (3, 3), activation='relu'),
+      MaxPooling2D(2, 2),
+      Conv2D(64, (3, 3), activation='relu'),
+      MaxPooling2D(2, 2),
+      Conv2D(128, (3, 3), activation='relu'),
+      MaxPooling2D(2, 2),
+      Conv2D(128, (3, 3), activation='relu'),
+      MaxPooling2D(2, 2),
+      Flatten(),
+      Dropout(0.5),
+      Dense(512, activation='relu'),
+      Dense(52, activation='softmax')
     ]), modelname)
 
   @classmethod

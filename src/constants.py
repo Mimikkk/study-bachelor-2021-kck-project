@@ -41,10 +41,10 @@ Paths: dict[str, str] = {
   'models': join(getcwd(), 'resources', 'models')
 }
 
-CardImageShape: tuple[int, int, int] = (224, 224, 1)
+CardImageShape: tuple[int, int, int] = (224, 224, 3)
 CardImageSize: tuple[int, int] = CardImageShape[:2]
 CardImageChannels: int = CardImageShape[2]
 CardCount: int = 52
-ImagesPerCard: int = 512
+ImagesPerCard: int = 2
 Epochs: int = 40
-ModelName: str = 'KolorowaMonika'
+ModelName: str = 'KolorowaMonika2'
